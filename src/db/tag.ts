@@ -1,8 +1,7 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose from 'mongoose';
 
 const TagSchema = new mongoose.Schema({
-  _id: Schema.Types.ObjectId,
-  name: String,
+  name: {type: String, unique: true}
 });
 
-module.exports = TagSchema;
+export default TagSchema;
