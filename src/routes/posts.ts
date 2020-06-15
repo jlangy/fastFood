@@ -11,7 +11,7 @@ interface Post {
   longitude: string
 }
 
-//Retrieve ref id's, create tag if it doesn't exist
+//Retrieve ref id's, create tag if it doesn't exist 
 function getTagIds(post: Post){
   const tags: string[] = [];
   const Tag = mongoose.model('Tag', TagSchema);
