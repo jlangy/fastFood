@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 require('dotenv').config();
 
 const app: express.Application = express();
-const PORT: number = Number(process.env.port) || 8001;
+const PORT: number = Number(process.env.port) || 8000;
 const dbUri: string = process.env.DB_URI || '';
 
 mongoose.connect(dbUri, {useNewUrlParser: true, useUnifiedTopology: true})

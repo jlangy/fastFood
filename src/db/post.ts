@@ -7,7 +7,7 @@ function atLeastOne(val: string[]){
 const PostSchema = new mongoose.Schema({
   upvotes: [{type: Schema.Types.ObjectId, ref: 'User', time: {type: Date, default: Date.now}}],
   downvotes: [{type: Schema.Types.ObjectId, ref: 'User', time: {type: Date, default: Date.now}}],
-  tags: {type: [{type: Schema.Types.ObjectId, ref: 'Tag'}], validate: atLeastOne},
+  tags: {type: [String], validate: atLeastOne},
   address: {type: String, required: true},
   latitude: {type: String, required: true},
   longitude: {type: String, required: true}
