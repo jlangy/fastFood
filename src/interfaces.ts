@@ -20,5 +20,7 @@ export interface IReturnPost {
   distance: number,
   userLikedPost: boolean,
   userDislikedPost: boolean,
-  storename: string
+  storename: string,
+  likes: number,
+  dislikes: number
 }
