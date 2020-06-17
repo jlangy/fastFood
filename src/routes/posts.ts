@@ -1,32 +1,10 @@
 import express = require('express');
 import mongoose from 'mongoose';
 import PostSchema from '../db/post';
-import { convertLatLongToDistance } from '../helpers';
+import { convertLatLongToDistance, sortPosts } from '../helpers';
+import {IPost, IReturnPost} from '../interfaces';
 const posts = express.Router();
 const USER_ID = "5eea56183d06b940dd4509bf"
-
-interface IPost extends mongoose.Document {
-  tags: string[],
-  address: string,
-  latitude: string,
-  longitude: string,
-  //TODO: Make upvote/downvote interfaces
-  upvotes: any[],
-  downvotes: any[],
-  distance: number,
-  storename: string
-}
-
-interface IReturnPost {
-  tags: string[],
-  address: string,
-  latitude: string,
-  longitude: string,
-  distance: number,
-  userLikedPost: boolean,
-  userDislikedPost: boolean,
-  storename: string
-}
 
 const Post = mongoose.model<IPost>('Post', PostSchema);
 
@@ -76,7 +54,7 @@ posts.get('/', async (req, res) => {
         stores.push(storename);
       }
     })
-    res.send({posts: closestPosts, stores})
+    res.send({posts: sortPosts(closestPosts), stores})
   } catch {
     res.status(500).send('db err')
   }

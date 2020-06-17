@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import { IReturnPost } from './interfaces';
 
 export function convertLatLongToDistance(lat1: number, lat2: number, long1: number, long2: number){
   const R = 6371e3;
@@ -13,4 +13,9 @@ export function convertLatLongToDistance(lat1: number, lat2: number, long1: numb
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 
   return R * c;
+}
+
+export function sortPosts(posts: IReturnPost[], radius: boolean = true, upvotes: boolean = true){
+  //TODO: implement sort function
+  return posts;
 }
