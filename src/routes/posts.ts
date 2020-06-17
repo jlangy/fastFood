@@ -1,7 +1,7 @@
 import express = require('express');
 import mongoose from 'mongoose';
 import PostSchema from '../db/post';
-import { convertLatLongToDistance, sortPosts, getFormattedPost } from '../helpers';
+import { sortPosts, getFormattedPost } from '../helpers';
 import {IPost, IReturnPost} from '../interfaces';
 const posts = express.Router();
 const USER_ID = "5eea56183d06b940dd4509bf"
