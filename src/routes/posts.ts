@@ -1,7 +1,7 @@
 import express = require("express");
 import mongoose from "mongoose";
 import PostSchema from "../db/post";
-import { getFormattedPost } from "../helpers";
+import { getFormattedPost, sortPosts } from "../helpers";
 import { getPostsByTagsAndLocation , voteForPost} from '../db/queries'
 import { IPost } from "../interfaces";
 const posts = express.Router();
@@ -30,12 +30,15 @@ posts.get("/", async (req, res) => {
   const longitude = Number(req.query.longitude);
   const radius = Number(req.query.radius);
   const tags = req.query.tag as string[];
+  const sort = String(req.query.sort);
   let posts: IPost[];
   try {
     posts = await Post.find(
       getPostsByTagsAndLocation(tags, longitude, latitude, radius)
     );
-    res.json({posts: posts.map(post => getFormattedPost(post, latitude, longitude)), stores: posts.map(post => post.storename)});
+    const formattedPosts = posts.map(post => getFormattedPost(post, latitude, longitude));
+    const sortedPosts = sortPosts(formattedPosts, sort)
+    res.json({posts: sortedPosts, stores: posts.map(post => post.storename)});
   } catch (e) {
     res.status(500).send("db err");
   }

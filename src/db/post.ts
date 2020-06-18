@@ -10,7 +10,10 @@ const PostSchema = new mongoose.Schema({
   tags: {type: [String], validate: atLeastOne},
   address: {type: String, required: true},
   storename: {type: String, required: true},
-  location: { type: [Number], index: '2d'}
+  location: { type: [Number], index: '2d'},
+  price: { type: Number, required: true},
+  discountPrice: { type: Number, required: true},
+  createdAt: {type: Date, default: Date.now}
 });
 
 export default PostSchema;

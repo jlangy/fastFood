@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 export interface IPost extends mongoose.Document {
+  _id: string,
   tags: string[],
   address: string,
   location: number[],
@@ -8,10 +9,14 @@ export interface IPost extends mongoose.Document {
   upvotes: any[],
   downvotes: any[],
   distance: number,
-  storename: string
+  storename: string,
+  price: number,
+  discountPrice: number,
+  createdAt: Date
 }
 
 export interface IReturnPost {
+  id: string,
   tags: string[],
   address: string,
   latitude: number,
@@ -21,5 +26,8 @@ export interface IReturnPost {
   userDislikedPost: boolean,
   storename: string,
   likes: number,
-  dislikes: number
+  dislikes: number,
+  price: number,
+  discountPrice: number,
+  createdAt: Date
 }
