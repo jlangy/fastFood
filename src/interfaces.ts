@@ -3,8 +3,7 @@ import mongoose from 'mongoose';
 export interface IPost extends mongoose.Document {
   tags: string[],
   address: string,
-  latitude: string,
-  longitude: string,
+  location: number[],
   //TODO: Make upvote/downvote interfaces
   upvotes: any[],
   downvotes: any[],
@@ -15,8 +14,8 @@ export interface IPost extends mongoose.Document {
 export interface IReturnPost {
   tags: string[],
   address: string,
-  latitude: string,
-  longitude: string,
+  latitude: number,
+  longitude: number,
   distance: number,
   userLikedPost: boolean,
   userDislikedPost: boolean,

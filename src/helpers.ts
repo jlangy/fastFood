@@ -22,9 +22,9 @@ export function sortPosts(posts: IReturnPost[], radius: boolean = true, upvotes:
 }
 
 export function getFormattedPost(dbPost: IPost, lat: number, long: number){
-  const distance: number = convertLatLongToDistance(Number(dbPost.latitude), Number(lat), Number(dbPost.longitude), Number(long));
+  const distance: number = convertLatLongToDistance(Number(dbPost.location[1]), Number(lat), Number(dbPost.location[0]), Number(long));
   let userLikedPost = dbPost.upvotes.some(upvote => upvote.User == USER_ID);
   let userDislikedPost = dbPost.downvotes.some(downvote => downvote.User === USER_ID);
-  const {tags, address, latitude, longitude, storename} = dbPost;
-  return {tags, address, latitude, longitude, distance, userLikedPost, userDislikedPost, storename, likes: dbPost.upvotes.length, dislikes: dbPost.downvotes.length}
+  const {tags, address, location, storename} = dbPost;
+  return {tags, address, latitude: location[1], longitude: location[0], distance, userLikedPost, userDislikedPost, storename, likes: dbPost.upvotes.length, dislikes: dbPost.downvotes.length}
 }

@@ -17,6 +17,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use('/session', require('./routes/session'))
 app.use('/users', require('./routes/users'))
 app.use('/posts', require('./routes/posts'))
+app.use('/tags', require('./routes/tags'))
 
 app.get('*', (req, res) => {
   res.send('Route Not Found');
