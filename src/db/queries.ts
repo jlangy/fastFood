@@ -53,3 +53,18 @@ export function getAllTags(){
     },
   ]
 }
+
+export function voteForPost(upvote: boolean, userId: string, postId: string){
+  const voteType = upvote ? "upvotes" : "downvotes";
+  const oppositeVoteType = upvote ? "downvotes" : "upvotes";
+  return [
+    { 
+      _id: postId,
+      [`${voteType}.User`]: {$ne: userId}
+    },
+    { 
+      $addToSet: { [voteType]: { User: userId } },
+      $pull: { [oppositeVoteType]: {User: userId} }
+    }
+  ]
+}

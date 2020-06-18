@@ -2,7 +2,7 @@ import express = require("express");
 import mongoose from "mongoose";
 import PostSchema from "../db/post";
 import { getFormattedPost } from "../helpers";
-import { getPostsByTagsAndLocation } from '../db/queries'
+import { getPostsByTagsAndLocation , voteForPost} from '../db/queries'
 import { IPost } from "../interfaces";
 const posts = express.Router();
 
@@ -25,28 +25,6 @@ posts.get("/:id", async (req, res) => {
   }
 });
 
-posts.put("/:id", async (req, res) => {
-  const postId = req.params.id;
-  const { upvote, userId } = req.body;
-  try {
-    const voteType = upvote ? "upvotes" : "downvotes";
-    const oppositeVoteType = upvote ? "downvotes" : "upvotes";
-    await Post.findOneAndUpdate(
-      { 
-        _id: postId,
-        [`${voteType}.User`]: {$ne: userId}
-      },
-      { 
-        $addToSet: { [voteType]: { User: userId } },
-        $pull: { [oppositeVoteType]: {User: userId} }
-      }
-    );
-    res.send('success');
-  } catch (e) {
-    res.status(500).send(e);
-  }
-});
-
 posts.get("/", async (req, res) => {
   const latitude = Number(req.query.latitude);
   const longitude = Number(req.query.longitude);
@@ -60,6 +38,18 @@ posts.get("/", async (req, res) => {
     res.json({posts: posts.map(post => getFormattedPost(post, latitude, longitude)), stores: posts.map(post => post.storename)});
   } catch (e) {
     res.status(500).send("db err");
+  }
+});
+
+posts.put("/:id", async (req, res) => {
+  const postId = req.params.id;
+  const { upvote, userId } = req.body;
+  try {
+    const [conditions, update] = voteForPost(upvote, userId, postId)
+    await Post.findOneAndUpdate(conditions, update);
+    res.send('success');
+  } catch (e) {
+    res.status(500).send(e);
   }
 });
 
