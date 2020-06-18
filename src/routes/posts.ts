@@ -5,7 +5,6 @@ import { getFormattedPost } from "../helpers";
 import { getPostsByTagsAndLocation } from '../db/queries'
 import { IPost } from "../interfaces";
 const posts = express.Router();
-const USER_ID = "5eea56183d06b940dd4509bf";
 
 const Post = mongoose.model<IPost>("Post", PostSchema);
 
@@ -30,19 +29,19 @@ posts.put("/:id", async (req, res) => {
   const postId = req.params.id;
   const { upvote, userId } = req.body;
   try {
-    if (upvote) {
-      await Post.updateOne(
-        { _id: postId },
-        { $push: { upvotes: { User: userId } } }
-      );
-      res.send("upvoted");
-    } else {
-      await Post.updateOne(
-        { _id: postId },
-        { $push: { downvotes: { User: userId } } }
-      );
-      res.send("downvoted");
-    }
+    const voteType = upvote ? "upvotes" : "downvotes";
+    const oppositeVoteType = upvote ? "downvotes" : "upvotes";
+    await Post.findOneAndUpdate(
+      { 
+        _id: postId,
+        [`${voteType}.User`]: {$ne: userId}
+      },
+      { 
+        $addToSet: { [voteType]: { User: userId } },
+        $pull: { [oppositeVoteType]: {User: userId} }
+      }
+    );
+    res.send('success');
   } catch (e) {
     res.status(500).send(e);
   }
@@ -58,9 +57,8 @@ posts.get("/", async (req, res) => {
     posts = await Post.find(
       getPostsByTagsAndLocation(tags, longitude, latitude, radius)
     );
-    res.json({posts, stores: posts.map(post => post.storename)});
+    res.json({posts: posts.map(post => getFormattedPost(post, latitude, longitude)), stores: posts.map(post => post.storename)});
   } catch (e) {
-    console.log(e)
     res.status(500).send("db err");
   }
 });
@@ -85,15 +83,12 @@ posts.post("/", async (req, res) => {
     price,
     discountPrice,
   });
-  post.save((err, user) => {
-    if (err) {
-      console.error("save error:", err);
-      return res.status(500).send(err);
-    } else {
-      console.log(`${user} saved successfully`);
-      res.send("success");
-    }
-  });
+  try {
+    await post.save();
+    res.send('success');
+  } catch (e) {
+    res.status(500).send(e);
+  }
 });
 
 module.exports = posts;

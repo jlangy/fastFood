@@ -11,8 +11,6 @@ const PostSchema = new mongoose.Schema({
   address: {type: String, required: true},
   storename: {type: String, required: true},
   location: { type: [Number], index: '2d'}
-  // latitude: {type: String, required: true},
-  // longitude: {type: String, required: true}
 });
 
 export default PostSchema;
