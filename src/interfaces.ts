@@ -15,6 +15,15 @@ export interface IPost extends mongoose.Document {
   createdAt: Date
 }
 
+export interface IUser extends mongoose.Document {
+  _id: string,
+  name: string,
+  email: string, 
+  password: string,
+  savedPosts: IPost[],
+  createdPosts: IPost[]
+}
+
 export interface IReturnPost {
   id: string,
   tags: string[],

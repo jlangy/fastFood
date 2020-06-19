@@ -5,8 +5,13 @@ function atLeastOne(val: string[]){
 }
 
 const PostSchema = new mongoose.Schema({
-  upvotes: [{User: {type: Schema.Types.ObjectId, ref: 'User'}, time: {type: Date, default: Date.now}}],
-  downvotes: [{User: {type: Schema.Types.ObjectId, ref: 'User'}, time: {type: Date, default: Date.now}}],
+  _id: String,
+  // upvotes: [{User: {type: Schema.Types.ObjectId, ref: 'User'}, time: {type: Date, default: Date.now}}],
+  //For seed data, remove for prod
+  upvotes: [{User: {type: String, ref: 'User'}, time: {type: Date, default: Date.now}}],
+  //For seed data, remove for prod
+  downvotes: [{User: {type: String, ref: 'User'}, time: {type: Date, default: Date.now}}],
+  // downvotes: [{User: {type: Schema.Types.ObjectId, ref: 'User'}, time: {type: Date, default: Date.now}}],
   tags: {type: [String], validate: atLeastOne},
   address: {type: String, required: true},
   storename: {type: String, required: true},
