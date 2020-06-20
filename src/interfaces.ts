@@ -20,8 +20,8 @@ export interface IUser extends mongoose.Document {
   name: string,
   email: string, 
   password: string,
-  savedPosts: IPost[],
-  createdPosts: IPost[]
+  savedPosts: string[] | IPost[],
+  createdPosts: string[] | IPost[]
 }
 
 export interface IReturnPost {
@@ -38,5 +38,6 @@ export interface IReturnPost {
   dislikes: number,
   price: number,
   discountPrice: number,
-  createdAt: Date
+  createdAt: Date,
+  userSavedPost: Boolean
 }

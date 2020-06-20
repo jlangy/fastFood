@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose from 'mongoose';
 
 function atLeastOne(val: string[]){
   return val.length > 0;
@@ -18,7 +18,7 @@ const PostSchema = new mongoose.Schema({
   location: { type: [Number], index: '2d'},
   price: { type: Number, required: true},
   discountPrice: { type: Number, required: true},
-  createdAt: {type: Date, default: Date.now}
+  createdAt: {type: Date, default: Date.now},
 });
 
 export default PostSchema;

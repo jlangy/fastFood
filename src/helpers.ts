@@ -1,5 +1,9 @@
-import { IReturnPost, IPost } from "./interfaces";
+import { IReturnPost, IPost, IUser } from "./interfaces";
+import mongoose from 'mongoose';
+import UserSchema from "./db/user";
 const USER_ID = "5eead9d6d34bf31f58a86904";
+
+const User = mongoose.model<IUser>("User", UserSchema)
 
 export function convertLatLongToDistance(
   lat1: number,
@@ -44,7 +48,7 @@ export function sortPosts(posts: IReturnPost[], sort: string) {
   }
 }
 
-export function getFormattedPost(dbPost: IPost, lat: number, long: number) {
+export function getFormattedPost(dbPost: IPost, user: IUser, lat: number, long: number) {
   const distance: number = convertLatLongToDistance(
     Number(dbPost.location[1]),
     Number(lat),
@@ -52,10 +56,9 @@ export function getFormattedPost(dbPost: IPost, lat: number, long: number) {
     Number(long)
   );
   let userLikedPost = dbPost.upvotes.some((upvote) => upvote.User == USER_ID);
-  let userDislikedPost = dbPost.downvotes.some(
-    (downvote) => downvote.User == USER_ID
-  );
+  let userDislikedPost = dbPost.downvotes.some((downvote) => downvote.User == USER_ID);
   const { tags, address, location, storename, _id, price, discountPrice, createdAt } = dbPost;
+  let userSavedPost = user.savedPosts.some((post: IPost | string) => typeof post === 'string' ? post === _id : post._id === _id);
   return {
     id: _id,
     tags,
@@ -70,6 +73,7 @@ export function getFormattedPost(dbPost: IPost, lat: number, long: number) {
     dislikes: dbPost.downvotes.length,
     price,
     discountPrice,
-    createdAt
+    createdAt,
+    userSavedPost
   };
 }

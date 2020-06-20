@@ -14,12 +14,12 @@ const User = mongoose.model<IUser>("User", UserSchema);
 
 posts.get("/:id", async (req, res) => {
   const id = req.params.id;
-  let post: IPost;
   try {
-    post = (await Post.findOne({ _id: id })) as IPost;
+    const [post, user] = await Promise.all([Post.findOne({ _id: id }), User.findOne({_id: USER_ID})]);
     res.json(
       getFormattedPost(
-        post,
+        <IPost>post,
+        <IUser>user,
         Number(req.query.latitude),
         Number(req.query.longitude)
       )
@@ -37,22 +37,26 @@ posts.get("/", async (req, res) => {
   const sort = String(req.query.sort);
   const filter = String(req.query.filter);
   try {
-    let posts: IPost[];
+    let posts: IPost[] | null;
+    let user: IUser | null;
     if(filter === 'saved'){
-      const user = await User.findOne({_id: USER_ID}).populate('savedPosts') as IUser;
-      posts = user.savedPosts;
+      user = await User.findOne({_id: USER_ID}).populate('savedPosts') as IUser;
+      posts = <unknown>user.savedPosts as IPost[];
     } else if (filter === 'created'){
-      const user = await User.findOne({_id: USER_ID}).populate('createdPosts') as IUser;
-      posts = user.createdPosts;
+      user = await User.findOne({_id: USER_ID}).populate('createdPosts') as IUser;
+      posts = <unknown>user.createdPosts as IPost[];
     } else {
-      posts = await Post.find(
-        getPostsByTagsAndLocation(tags, longitude, latitude, radius)
-      );
+      [posts, user] = await Promise.all([Post.find(getPostsByTagsAndLocation(tags, longitude, latitude, radius)), User.findOne({_id: USER_ID})]);
     }
-    const formattedPosts = posts.map(post => getFormattedPost(post, latitude, longitude));
+    if(!posts || !user){
+      throw new Error('resource not found');
+    }
+    //@ts-ignore
+    const formattedPosts = posts.map(post => getFormattedPost(post, user, latitude, longitude));
     const sortedPosts = sortPosts(formattedPosts, sort)
     res.json({posts: sortedPosts, stores: posts.map(post => post.storename)});
   } catch (e) {
+    console.log(e)
     res.status(500).send("db err");
   }
 });
@@ -70,7 +74,6 @@ posts.put("/:id", async (req, res) => {
 });
 
 posts.post("/", async (req, res) => {
-  //TODO: create new post
   const {
     storename,
     address,
@@ -91,8 +94,7 @@ posts.post("/", async (req, res) => {
     discountPrice,
   });
   try {
-    const createdPost = await post.save();
-    //@ts-ignore
+    const createdPost = await post.save({});
     await User.findOneAndUpdate({_id: USER_ID}, {$push: {createdPosts: String(createdPost._id)}})
     res.send('success');
   } catch (e) {

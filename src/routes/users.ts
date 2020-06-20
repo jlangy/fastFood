@@ -7,7 +7,7 @@ const User = mongoose.model<IUser>("User", UserSchema);
 const users = express.Router();
 
 users.post('/', async (req, res) => {
-  const user = new User(req.body);
+  const user = new User({...req.body, _id: new mongoose.mongo.ObjectID()});
   try {
     await user.save(); 
     res.send('success')

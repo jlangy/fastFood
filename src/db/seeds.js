@@ -17,7 +17,9 @@ const PostSchema = new mongoose.Schema({
   location: { type: [Number], index: '2d'},
   price: { type: Number, required: true},
   discountPrice: { type: Number, required: true},
-  createdAt: {type: Date, default: Date.now}
+  createdAt: {type: Date, default: Date.now},
+  //Add this to auto-delete docs. If we want to only set in-active, need a cron job.
+  // active: {type: Date, default: Date.now, expires: "30s"}
 });
 
 const UserSchema = new mongoose.Schema({
@@ -78,7 +80,7 @@ const posts = [
     location: [5, 3.2],
     address: '2 main st.',
     upvotes: [{User: '5eead9d6d34bf31f58a86904', time: Date.now()}],
-    downvotes: [{User: '5eead9d6d34bf31f58a86905', time: Date.now()}, {User: '5eead9d6d34bf31f58a86904', time: Date.now()}],
+    downvotes: [{User: '5eead9d6d34bf31f58a86905', time: Date.now()}, {User: '5eead9d6d34bf31f58a86906', time: Date.now()}],
     price: 5.10,
     discountPrice: 3.35,
     storename: 'walmart'
