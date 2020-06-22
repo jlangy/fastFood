@@ -8,22 +8,26 @@
     "start": "nodemon index.js",
     "tsc": "tsc",
     "compile": "tsc && node dist/index.js",
-    "dev": "./node_modules/nodemon/bin/nodemon.js -e ts  --exec \"npm run compile\""
+    "dev": "npx run ./node_modules/nodemon/bin/nodemon.js -e ts  --exec \"npm run compile\""
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/cors": "^2.8.6",
     "@types/mongoose": "^5.7.24",
     "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "mongodb": "^3.5.9",
     "mongoose": "^5.9.18",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "tsc": "^1.20150623.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.6",
     "@types/mongodb": "^3.5.20",
-    "@types/node": "^14.0.13"
+    "@types/node": "^14.0.13",
+    "typescript": "^3.9.5"
   }
 }
