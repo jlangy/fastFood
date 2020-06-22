@@ -1,28 +1,40 @@
 import express = require('express');
 import mongoose from 'mongoose';
 import UserSchema from '../db/user';
+import { IUser } from '../interfaces';
 
+const User = mongoose.model<IUser>("User", UserSchema);
 const users = express.Router();
 
-interface User {
-  name: number,
-  email: string,
-  gibberish: string
-}
-
-users.post('/', (req, res) => {
-  const User = mongoose.model('User', UserSchema);
-  const user = new User(req.body);
-  user.save((err, user) => {
-    if(err) {
-      console.error('save error:', err);
-      return res.status(500).send(err);
-    } else {
-      console.log(`${user} saved successfully`);
-    }
-  })
-  //TODO: register user when posting users
-  res.send('posted /users')
+users.post('/', async (req, res) => {
+  const user = new User({...req.body, _id: new mongoose.mongo.ObjectID()});
+  try {
+    await user.save(); 
+    res.send('success')
+  } catch (e) {
+    console.log(e);
+    res.status(500).send('db err');
+  }
 });
+
+users.put('/:id', async (req, res) => {
+  const userId = req.params.id;
+  console.log(userId);
+  const postId = req.body.postId;
+  const saving = req.body.saving;
+  try {
+    if(saving){
+      //@ts-ignore
+      await User.findOneAndUpdate({_id: userId}, {$addToSet: {savedPosts: String(postId)}})
+    } else {
+      //@ts-ignore
+      await User.findOneAndUpdate({_id: userId}, {$pull: {savedPosts: String(postId)}})
+    }
+    res.send('success')
+  } catch (e) {
+    console.error(e)
+    res.status(500).send('err');
+  }
+})
 
 module.exports = users;

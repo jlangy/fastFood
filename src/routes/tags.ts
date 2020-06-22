@@ -23,6 +23,7 @@ tag.get("/", async (req, res) => {
   const latitude = Number(req.query.latitude);
   const radius = Number(req.query.radius);
   const isSearcher = Boolean(Number(req.query.searcher));
+  //Return local tags for searchers, return all tags for posters.
   if (isSearcher) {
     fetchAndSendTags(getTagsByLocation(longitude, latitude, radius), res);
   } else {
