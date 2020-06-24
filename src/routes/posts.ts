@@ -62,6 +62,7 @@ posts.get("/", async (req, res) => {
 });
 
 posts.put("/:id", async (req, res) => {
+  console.log('put')
   const postId = req.params.id;
   const { upvote, userId } = req.body;
   try {
