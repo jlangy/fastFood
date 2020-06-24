@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import PostSchema from "../db/post";
 import UserSchema from "../db/user";
 import { getFormattedPost, sortPosts } from "../helpers";
-import { getPostsByTagsAndLocation , voteForPost} from '../db/queries'
+import { getPostsByTagsAndLocation , voteForPost, removeVoteForPost} from '../db/queries'
 import { IPost, IUser } from "../interfaces";
 const posts = express.Router();
 //Hardcoded ID for now, user verification to be completed
@@ -62,11 +62,15 @@ posts.get("/", async (req, res) => {
 });
 
 posts.put("/:id", async (req, res) => {
-  console.log('put')
   const postId = req.params.id;
-  const { upvote, userId } = req.body;
+  const { upvote, userId, remove } = req.body;
   try {
-    const [conditions, update] = voteForPost(upvote, userId, postId)
+    let conditions, update;
+    if(remove){
+      [conditions, update] = removeVoteForPost(postId, userId, upvote)
+    } else {
+      [conditions, update] = voteForPost(upvote, userId, postId)
+    }
     await Post.findOneAndUpdate(conditions, update);
     res.send('success');
   } catch (e) {

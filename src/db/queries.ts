@@ -68,3 +68,15 @@ export function voteForPost(upvote: boolean, userId: string, postId: string){
     }
   ]
 }
+
+export function removeVoteForPost(postId: string, userId: string, upvote: boolean){
+  const voteType = upvote ? "upvotes" : "downvotes";
+  return ([
+    { 
+      _id: postId
+    },
+    { 
+      $pull: { [voteType]: {User: userId} }
+    }
+  ])
+}
