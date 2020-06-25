@@ -75,4 +75,24 @@ users.post("/login", async (req, res) => {
   }
 });
 
+users.put('/:id', async (req, res) => {
+  const userId = req.params.id;
+  console.log(userId);
+  const postId = req.body.postId;
+  const saving = req.body.saving;
+  try {
+    if(saving){
+      //@ts-ignore
+      await User.findOneAndUpdate({_id: userId}, {$addToSet: {savedPosts: String(postId)}})
+    } else {
+      //@ts-ignore
+      await User.findOneAndUpdate({_id: userId}, {$pull: {savedPosts: String(postId)}})
+    }
+    res.send('success')
+  } catch (e) {
+    console.error(e)
+    res.status(500).send('err');
+  }
+})
+
 module.exports = users;
