@@ -13,6 +13,20 @@ export function getPostsByTagsAndLocation(tags: string[], longitude: number, lat
   }
 }
 
+export function getPostsByLocation(longitude: number, latitude: number, radius: number){
+  return {
+    location: {
+      $near: {
+        $geometry: {
+          type: "Point",
+          coordinates: [longitude, latitude],
+        },
+        $maxDistance: radius,
+      },
+    }
+  }
+}
+
 export function getTagsByLocation(longitude: number, latitude: number, radius: number){
   return [
     {

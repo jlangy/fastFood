@@ -3,11 +3,15 @@ import mongoose from "mongoose";
 import PostSchema from "../db/post";
 import UserSchema from "../db/user";
 import { getFormattedPost, sortPosts } from "../helpers";
+<<<<<<< HEAD
 import {
   getPostsByTagsAndLocation,
   voteForPost,
   removeVoteForPost,
 } from "../db/queries";
+=======
+import { getPostsByTagsAndLocation , voteForPost, removeVoteForPost, getPostsByLocation} from '../db/queries'
+>>>>>>> 0a266ab3decf3b16d56397187257bc9169d77f81
 import { IPost, IUser } from "../interfaces";
 const posts = express.Router();
 //Hardcoded ID for now, user verification to be completed
@@ -46,21 +50,16 @@ posts.get("/", async (req, res) => {
   try {
     let posts: IPost[] | null;
     let user: IUser | null;
-    if (filter === "saved") {
-      user = (await User.findOne({ _id: USER_ID }).populate(
-        "savedPosts"
-      )) as IUser;
-      posts = (<unknown>user.savedPosts) as IPost[];
-    } else if (filter === "created") {
-      user = (await User.findOne({ _id: USER_ID }).populate(
-        "createdPosts"
-      )) as IUser;
-      posts = (<unknown>user.createdPosts) as IPost[];
+    if(filter === 'saved'){
+      user = await User.findOne({_id: USER_ID}).populate('savedPosts') as IUser;
+      posts = <unknown>user.savedPosts as IPost[];
+    } else if (filter === 'created'){
+      user = await User.findOne({_id: USER_ID}).populate('createdPosts') as IUser;
+      posts = <unknown>user.createdPosts as IPost[];
+    } else if(tags && tags.length > 0){
+      [posts, user] = await Promise.all([Post.find(getPostsByTagsAndLocation(tags, longitude, latitude, radius)), User.findOne({_id: USER_ID})]);
     } else {
-      [posts, user] = await Promise.all([
-        Post.find(getPostsByTagsAndLocation(tags, longitude, latitude, radius)),
-        User.findOne({ _id: USER_ID }),
-      ]);
+      [posts, user] = await Promise.all([Post.find(getPostsByLocation(longitude, latitude, radius)), User.findOne({_id: USER_ID})]);
     }
     if (!posts || !user) {
       throw new Error("resource not found");
