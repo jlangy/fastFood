@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js",
+    "start": "node dist/index.js",
     "tsc": "tsc",
     "compile": "tsc && node dist/index.js",
-    "dev": "npx run ./node_modules/nodemon/bin/nodemon.js -e ts  --exec \"npm run compile\""
+    "build": "npm run compile"
   },
   "author": "",
   "license": "ISC",
