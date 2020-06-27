@@ -9,6 +9,7 @@ import {
   removeVoteForPost,
   getPostsByLocation,
 } from "../db/queries";
+
 import { IPost, IUser } from "../interfaces";
 const posts = express.Router();
 //Hardcoded ID for now, user verification to be completed
