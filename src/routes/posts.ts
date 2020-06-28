@@ -3,7 +3,13 @@ import mongoose from "mongoose";
 import PostSchema from "../db/post";
 import UserSchema from "../db/user";
 import { getFormattedPost, sortPosts } from "../helpers";
-import { getPostsByTagsAndLocation , voteForPost, removeVoteForPost, getPostsByLocation} from '../db/queries'
+import {
+  getPostsByTagsAndLocation,
+  voteForPost,
+  removeVoteForPost,
+  getPostsByLocation,
+} from "../db/queries";
+
 import { IPost, IUser } from "../interfaces";
 const posts = express.Router();
 //Hardcoded ID for now, user verification to be completed
@@ -15,7 +21,10 @@ const User = mongoose.model<IUser>("User", UserSchema);
 posts.get("/:id", async (req, res) => {
   const id = req.params.id;
   try {
-    const [post, user] = await Promise.all([Post.findOne({ _id: id }), User.findOne({_id: USER_ID})]);
+    const [post, user] = await Promise.all([
+      Post.findOne({ _id: id }),
+      User.findOne({ _id: USER_ID }),
+    ]);
     res.json(
       getFormattedPost(
         <IPost>post,
@@ -39,26 +48,41 @@ posts.get("/", async (req, res) => {
   try {
     let posts: IPost[] | null;
     let user: IUser | null;
-    if(filter === 'saved'){
-      user = await User.findOne({_id: USER_ID}).populate('savedPosts') as IUser;
-      posts = <unknown>user.savedPosts as IPost[];
-    } else if (filter === 'created'){
-      user = await User.findOne({_id: USER_ID}).populate('createdPosts') as IUser;
-      posts = <unknown>user.createdPosts as IPost[];
-    } else if(tags && tags.length > 0){
-      [posts, user] = await Promise.all([Post.find(getPostsByTagsAndLocation(tags, longitude, latitude, radius)), User.findOne({_id: USER_ID})]);
+    if (filter === "saved") {
+      user = (await User.findOne({ _id: USER_ID }).populate(
+        "savedPosts"
+      )) as IUser;
+      posts = (<unknown>user.savedPosts) as IPost[];
+    } else if (filter === "created") {
+      user = (await User.findOne({ _id: USER_ID }).populate(
+        "createdPosts"
+      )) as IUser;
+      posts = (<unknown>user.createdPosts) as IPost[];
+    } else if (tags && tags.length > 0) {
+      [posts, user] = await Promise.all([
+        Post.find(getPostsByTagsAndLocation(tags, longitude, latitude, radius)),
+        User.findOne({ _id: USER_ID }),
+      ]);
     } else {
-      [posts, user] = await Promise.all([Post.find(getPostsByLocation(longitude, latitude, radius)), User.findOne({_id: USER_ID})]);
+      [posts, user] = await Promise.all([
+        Post.find(getPostsByLocation(longitude, latitude, radius)),
+        User.findOne({ _id: USER_ID }),
+      ]);
     }
-    if(!posts || !user){
-      throw new Error('resource not found');
+    if (!posts || !user) {
+      throw new Error("resource not found");
     }
     //@ts-ignore
-    const formattedPosts = posts.map(post => getFormattedPost(post, user, latitude, longitude));
-    const sortedPosts = sortPosts(formattedPosts, sort)
-    res.json({posts: sortedPosts, stores: posts.map(post => post.storename)});
+    const formattedPosts = posts.map((post) =>
+      getFormattedPost(post, user, latitude, longitude)
+    );
+    const sortedPosts = sortPosts(formattedPosts, sort);
+    res.json({
+      posts: sortedPosts,
+      stores: posts.map((post) => post.storename),
+    });
   } catch (e) {
-    console.log(e)
+    console.log(e);
     res.status(500).send("db err");
   }
 });
@@ -68,13 +92,13 @@ posts.put("/:id", async (req, res) => {
   const { upvote, userId, remove } = req.body;
   try {
     let conditions, update;
-    if(remove){
-      [conditions, update] = removeVoteForPost(postId, userId, upvote)
+    if (remove) {
+      [conditions, update] = removeVoteForPost(postId, userId, upvote);
     } else {
-      [conditions, update] = voteForPost(upvote, userId, postId)
+      [conditions, update] = voteForPost(upvote, userId, postId);
     }
     await Post.findOneAndUpdate(conditions, update);
-    res.send('success');
+    res.send("success");
   } catch (e) {
     res.status(500).send(e);
   }
@@ -89,6 +113,7 @@ posts.post("/", async (req, res) => {
     longitude,
     price,
     discountPrice,
+    imageUrl,
   } = req.body;
   const location = [Number(longitude), Number(latitude)];
   const post = new Post({
@@ -99,13 +124,17 @@ posts.post("/", async (req, res) => {
     location,
     price,
     discountPrice,
+    imageUrl,
   });
   try {
     const createdPost = await post.save({});
-    await User.findOneAndUpdate({_id: USER_ID}, {$push: {createdPosts: String(createdPost._id)}})
-    res.send('success');
+    await User.findOneAndUpdate(
+      { _id: USER_ID },
+      { $push: { createdPosts: String(createdPost._id) } }
+    );
+    res.send("success");
   } catch (e) {
-    console.log(e)
+    console.log(e);
     res.status(500).send(e);
   }
 });
