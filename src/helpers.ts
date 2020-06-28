@@ -57,7 +57,7 @@ export function getFormattedPost(dbPost: IPost, user: IUser, lat: number, long: 
   );
   let userLikedPost = dbPost.upvotes.some((upvote) => upvote.User == USER_ID);
   let userDislikedPost = dbPost.downvotes.some((downvote) => downvote.User == USER_ID);
-  const { tags, address, location, storename, _id, price, discountPrice, createdAt } = dbPost;
+  const { tags, address, location, storename, _id, price, discountPrice, createdAt, imageUrl } = dbPost;
   let userSavedPost = user.savedPosts.some((post: IPost | string) => typeof post === 'string' ? post === _id : post._id === _id);
   return {
     id: _id,
@@ -74,6 +74,7 @@ export function getFormattedPost(dbPost: IPost, user: IUser, lat: number, long: 
     price,
     discountPrice,
     createdAt,
-    userSavedPost
+    userSavedPost,
+    imageUrl
   };
 }

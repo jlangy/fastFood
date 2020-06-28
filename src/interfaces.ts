@@ -12,7 +12,8 @@ export interface IPost extends mongoose.Document {
   storename: string,
   price: number,
   discountPrice: number,
-  createdAt: Date
+  createdAt: Date,
+  imageUrl: String
 }
 
 export interface IUser extends mongoose.Document {

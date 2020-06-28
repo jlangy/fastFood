@@ -72,8 +72,8 @@ posts.get("/", async (req, res) => {
     if (!posts || !user) {
       throw new Error("resource not found");
     }
-    //@ts-ignore
     const formattedPosts = posts.map((post) =>
+      //@ts-ignore
       getFormattedPost(post, user, latitude, longitude)
     );
     const sortedPosts = sortPosts(formattedPosts, sort);
