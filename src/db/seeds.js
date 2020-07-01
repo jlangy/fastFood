@@ -58,7 +58,7 @@ const users = [
   },
   {
     _id: '5eead9d6d34bf31f58a86906',
-    name: 'Rachel',
+    name: 'Jacob',
     email: 'a@n.com',
     password: 'abc',
     savedPosts: ['5eead9d6d34bf31f58a86910', '5eead9d6d34bf31f58a86911'],
