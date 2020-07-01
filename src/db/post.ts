@@ -30,6 +30,9 @@ const PostSchema = new mongoose.Schema({
   price: { type: Number, required: true },
   discountPrice: { type: Number, required: true },
   createdAt: { type: Date, default: Date.now },
+  posterName: String,
+  posterId: String,
+  posterStatus: String
 });
 
 export default PostSchema;

@@ -31,6 +31,7 @@ const UserSchema = new mongoose.Schema({
   password: {type: String, required: true},
   savedPosts: [String],
   createdPosts: [String],
+  status: String
 });
 
 const Post = mongoose.model("Post", PostSchema);
@@ -39,11 +40,12 @@ const User = mongoose.model("User", UserSchema);
 const users = [
   {
     _id: '5eead9d6d34bf31f58a86904',
-    name: 'Jack',
+    name: 'Amy',
     email: 'a@b.com',
     password: 'abc',
     savedPosts: ['5eead9d6d34bf31f58a86909', '5eead9d6d34bf31f58a86904'],
-    createdPosts: ['5eead9d6d34bf31f58a86905', '5eead9d6d34bf31f58a86906']
+    createdPosts: ['5eead9d6d34bf31f58a86904', '5eead9d6d34bf31f58a86905', '5eead9d6d34bf31f58a86906'],
+    status: "super"
   },
   {
     _id: '5eead9d6d34bf31f58a86905',
@@ -51,21 +53,26 @@ const users = [
     email: 'c@b.com',
     password: 'abc',
     savedPosts: ['5eead9d6d34bf31f58a86904'],
-    createdPosts: ['5eead9d6d34bf31f58a86905', '5eead9d6d34bf31f58a86906', '5eead9d6d34bf31f58a86908']
+    createdPosts: ['5eead9d6d34bf31f58a86907', '5eead9d6d34bf31f58a86908', '5eead9d6d34bf31f58a86909'],
+    status: "regular"
   },
   {
     _id: '5eead9d6d34bf31f58a86906',
     name: 'Rachel',
     email: 'a@n.com',
     password: 'abc',
-    savedPosts: ['5eead9d6d34bf31f58a86904', '5eead9d6d34bf31f58a86906'],
-    createdPosts: ['5eead9d6d34bf31f58a86907']
+    savedPosts: ['5eead9d6d34bf31f58a86910', '5eead9d6d34bf31f58a86911'],
+    createdPosts: ['5eead9d6d34bf31f58a86907'],
+    status: "regular"
   }
 ]
 
 const posts = [
   {
     _id: '5eead9d6d34bf31f58a86904',
+    posterId: '5eead9d6d34bf31f58a86904',
+    posterName: "Amy",
+    posterStatus: "super",
     tags: ['bread', 'sliced', 'grain'],
     location: [43.872, -79.266],
     address: '5762 Hwy 7, Markham, ON L3P 1A8, Canada',
@@ -78,6 +85,9 @@ const posts = [
   },
   {
     _id: '5eead9d6d34bf31f58a86905',
+    posterId: '5eead9d6d34bf31f58a86904',
+    posterName: "Amy",
+    posterStatus: "super",
     tags: ['chicken', 'thighs', 'meat'],
     location: [43.872, -79.266],
     address: '5762 Hwy 7, Markham, ON L3P 1A8, Canada',
@@ -90,6 +100,9 @@ const posts = [
   },
   {
     _id: '5eead9d6d34bf31f58a86906',
+    posterId: '5eead9d6d34bf31f58a86904',
+    posterName: "Amy",
+    posterStatus: "super",
     tags: ['pork', 'meat', 'shoulder'],
     location: [43.8794, -79.316],
     address: '4476 16th Ave, Markham, ON L3R 0M1, Canada',
@@ -102,6 +115,9 @@ const posts = [
   },
   {
     _id: '5eead9d6d34bf31f58a86907',
+    posterId: '5eead9d6d34bf31f58a86905',
+    posterName: "Alice",
+    posterStatus: "regular",
     tags: ['rice', 'wild', 'grain'],
     location: [43.8794, -79.316],
     address: '4476 16th Ave, Markham, ON L3R 0M1, Canada',
@@ -114,6 +130,9 @@ const posts = [
   },
   {
     _id: '5eead9d6d34bf31f58a86908',
+    posterId: '5eead9d6d34bf31f58a86905',
+    posterName: "Alice",
+    posterStatus: "regular",
     tags: ['shreddies', 'cereal'],
     location: [43.8577, -79.3222],
     address: '3997 Hwy #7, Markham, ON L3R 5M6, Canada',
@@ -126,6 +145,9 @@ const posts = [
   },
   {
     _id: '5eead9d6d34bf31f58a86911',
+    posterId: '5eead9d6d34bf31f58a86905',
+    posterName: "Alice",
+    posterStatus: "regular",
     tags: ['sirloin', 'steak', 'meat'],
     location: [43.8577, -79.3222],
     address: '3997 Hwy #7, Markham, ON L3R 5M6, Canada',
@@ -138,6 +160,9 @@ const posts = [
   },
   {
     _id: '5eead9d6d34bf31f58a86909',
+    posterName: "Jacob",
+    posterStatus: "regular",
+    posterId: '5eead9d6d34bf31f58a86906',
     tags: ['raisin bran', 'cereal', 'fruit'],
     location: [43.8601, -79.3047],
     address: '8360 Kennedy Rd, Markham, ON L3R 9W4, Canada',
@@ -150,6 +175,9 @@ const posts = [
   },
   {
     _id: '5eead9d6d34bf31f58a86910',
+    posterName: "Jacob",
+    posterStatus: "regular",
+    posterId: '5eead9d6d34bf31f58a86906',
     tags: ['gala', 'apple', 'fruit'],
     location: [43.8737, -79.2853],
     address: '200 Bullock Dr, Markham, ON L3P 1W2, Canada',

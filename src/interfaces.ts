@@ -13,7 +13,10 @@ export interface IPost extends mongoose.Document {
   price: number,
   discountPrice: number,
   createdAt: Date,
-  imageUrl: String
+  imageUrl: String,
+  posterName: String,
+  posterId: String,
+  posterStatus: String
 }
 
 export interface IUser extends mongoose.Document {
@@ -41,5 +44,8 @@ export interface IReturnPost {
   price: number,
   discountPrice: number,
   createdAt: Date,
-  userSavedPost: Boolean
+  userSavedPost: Boolean,
+  posterName: String,
+  posterId: String,
+  posterStatus: String
 }

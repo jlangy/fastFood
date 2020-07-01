@@ -125,6 +125,10 @@ posts.post("/", async (req, res) => {
     price,
     discountPrice,
     imageUrl,
+    //TODO: make user information dynamic once auth is finished
+    posterId: USER_ID,
+    posterName: 'Amy',
+    posterStatus: 'super'
   });
   try {
     const createdPost = await post.save({});

@@ -76,8 +76,8 @@ export function getFormattedPost(dbPost: IPost, user: IUser, lat: number, long: 
     createdAt,
     userSavedPost,
     imageUrl,
-    posterId: user._id,
-    posterStatus: user.status,
-    posterName: user.name,
+    posterId: dbPost.posterId,
+    posterStatus: dbPost.posterStatus,
+    posterName: dbPost.posterName,
   };
 }
