@@ -22,7 +22,8 @@ export interface IUser extends mongoose.Document {
   email: string, 
   password: string,
   savedPosts: string[] | IPost[],
-  createdPosts: string[] | IPost[]
+  createdPosts: string[] | IPost[],
+  status: string
 }
 
 export interface IReturnPost {

@@ -7,6 +7,7 @@ const UserSchema = new mongoose.Schema({
   password: { type: String, required: true },
   savedPosts: [{ type: String, ref: "Post" }],
   createdPosts: [{ type: String, ref: "Post" }],
+  status: String
 });
 
 export default UserSchema;

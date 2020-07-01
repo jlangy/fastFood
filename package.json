@@ -7,8 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node dist/index.js",
     "tsc": "tsc",
+    "compile_dev": "tsc && npm run start",
     "compile": "tsc",
-    "build": "npm run compile"
+    "build": "npm run compile",
+    "dev": "./node_modules/nodemon/bin/nodemon.js -e ts  --exec \"npm run compile_dev\""
   },
   "author": "",
   "license": "ISC",
