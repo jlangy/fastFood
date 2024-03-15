@@ -4,17 +4,17 @@ on:
       dry_run:
         default: true
         type: boolean
-        description: set dry run to see the output without actually scheduling deletion
+        description: See output without deleting
       days_before_branch_delete:
         default: 7
-        description: How many days to wait before deleting the branches Set to 0 to delete immediately.
+        description: Days to wait before deletion
 
 jobs:
   remove-stale-branches:
     name: Remove Stale Branches
     runs-on: ubuntu-latest
     steps:
-      - uses: fpicalausa/remove-stale-branches@v1.6.0
+      - uses: fpicalausa/remove-stale-branches@f442973cf98f499d7d13c7e274c62d87fbaedc39
         with:
           dry-run: ${{ github.event.inputs.dry_run }} 
           exempt-branches-regex: (auth|master)
