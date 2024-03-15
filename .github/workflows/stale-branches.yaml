@@ -1,0 +1,16 @@
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        default: true
+        options: [true, false]
+
+jobs:
+  remove-stale-branches:
+    name: Remove Stale Branches
+    runs-on: ubuntu-latest
+    steps:
+      - uses: fpicalausa/remove-stale-branches@v1.6.0
+        with:
+          dry-run: ${{ github.event.inputs.dry_run }} 
+          exempt-branches-regex: (auth|master)
