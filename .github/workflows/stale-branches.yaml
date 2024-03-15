@@ -3,7 +3,7 @@ on:
     inputs:
       dry_run:
         default: true
-        options: [true, false]
+        type: boolean
 
 jobs:
   remove-stale-branches:
